@@ -344,25 +344,27 @@ function fitFont(text, maxW, maxSize, weight) {
 // ─────────────────────────────────
 function drawTitle(){
   drawBG_shore(0);
-  const titleGrad = ctx.createLinearGradient(W/2-260,75, W/2+260,155);
+  const pw=Math.min(W*0.88, 640);
+  const ph=90, px=W/2-pw/2, py=72;
+  const titleGrad = ctx.createLinearGradient(px,py, px+pw,py+ph);
   titleGrad.addColorStop(0,'rgba(255,255,255,0.95)');
   titleGrad.addColorStop(1,'rgba(230,240,255,0.95)');
-  ctx.fillStyle=titleGrad; rrect(W/2-260,75,520,86,22); ctx.fill();
-  ctx.strokeStyle='rgba(80,120,220,0.4)'; ctx.lineWidth=2; rrect(W/2-260,75,520,86,22); ctx.stroke();
+  ctx.fillStyle=titleGrad; rrect(px,py,pw,ph,22); ctx.fill();
+  ctx.strokeStyle='rgba(80,120,220,0.4)'; ctx.lineWidth=2; rrect(px,py,pw,ph,22); ctx.stroke();
 
   ctx.textAlign='center';
-  fitFont('🏔️ やまなかこアドベンチャー！', 490, 34);
+  fitFont('🏔️ やまなかこアドベンチャー！', pw-40, 34);
   ctx.fillStyle='#1133AA';
-  ctx.fillText('🏔️ やまなかこアドベンチャー！', W/2, 122);
+  ctx.fillText('🏔️ やまなかこアドベンチャー！', W/2, 125);
 
-  fitFont('山中湖で大冒険しよう！', 420, 20);
+  fitFont('山中湖で大冒険しよう！', pw-60, 20);
   ctx.fillStyle='#4455AA';
-  ctx.fillText('山中湖で大冒険しよう！', W/2, 192);
+  ctx.fillText('山中湖で大冒険しよう！', W/2, 196);
 
   if(blink(3)){
-    fitFont('▶ タップ または クリック ではじめる！', 520, 22);
+    fitFont('▶ タップ または クリック ではじめる！', pw, 22);
     ctx.fillStyle='#FF6622';
-    ctx.fillText('▶ タップ または クリック ではじめる！', W/2, 275);
+    ctx.fillText('▶ タップ または クリック ではじめる！', W/2, 278);
   }
   ctx.textAlign='left';
 }
