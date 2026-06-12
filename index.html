@@ -145,7 +145,7 @@ const BGM_SEQ = {
   ending: [[523,150],[659,150],[784,150],[1047,300],[R,150],[784,150],[880,150],[784,150],[659,300],[R,150],[698,150],[880,150],[1047,150],[880,300],[R,150],[784,150],[698,150],[659,150],[523,300],[R,300]],
 };
 let bgmKey=null,bgmIdx=0,bgmTid=null,stage3Audio=null;
-function _initS3(){if(stage3Audio)return;stage3Audio=new Audio(STAGE3_BGM_SRC);stage3Audio.loop=true;stage3Audio.volume=0.45;}
+function _initS3(){if(stage3Audio)return;stage3Audio=new Audio(STAGE3_BGM_SRC);stage3Audio.loop=true;stage3Audio.volume=0.3;}
 function startBGM(key){if(bgmKey===key)return;stopBGM();bgmKey=key;if(key==='forest'){_initS3();stage3Audio.currentTime=0;stage3Audio.play().catch(()=>{});return;}bgmIdx=0;_bgmTick();}
 function stopBGM(){bgmKey=null;if(bgmTid)clearTimeout(bgmTid);if(stage3Audio&&!stage3Audio.paused){stage3Audio.pause();stage3Audio.currentTime=0;}}
 function _bgmTick(){const k=bgmKey;if(!k||!AC)return;const[hz,ms]=BGM_SEQ[k][bgmIdx%BGM_SEQ[k].length];if(hz>0)tone(hz,ms*0.80/1000,0.07,'square');bgmIdx++;bgmTid=setTimeout(_bgmTick,ms);}
@@ -243,10 +243,17 @@ function buildStage(idx){
   for(let x=1100;x<sg.len-350;x+=270+rand(180)){
     if(Math.abs(x-djWallX)<300) continue; // 壁周辺をクリア
     const ot=sg.obsTypes[ri(sg.obsTypes.length)];
-    obs.push({x,y:GROUND-ot.h,w:ot.w,h:ot.h,type:ot.t,phase:rand(6.28),spd:ot.t==='rollog'?2.5:0});
+    obs.push({x,y:GROUND-ot.h,w:ot.w,h:ot.h,type:ot.t,phase:rand(6.28),spd:ot.t==='rollog'?3.0:0});
+  }
+  // ステージ3: 固定rollog追加（壁手前）
+  if(idx===2){
+    obs.push({x:2600, y:GROUND-32, w:32,h:32, type:'rollog',phase:0,spd:3.0,triggerX:1400});
   }
   // ステージ3: 2段ジャンプ必須の岩壁（高さ176px → 1段ジャンプ最大160pxでは越えられない）
   if(idx===2){
+    // 壁クリア後の転がる丸太×2
+    obs.push({x:4750, y:GROUND-32, w:32,h:32, type:'rollog',phase:0,spd:3.0,triggerX:3550});
+    obs.push({x:5200, y:GROUND-32, w:32,h:32, type:'rollog',phase:0,spd:3.0,triggerX:4000});
     obs.push({x:djWallX, y:GROUND-44,  w:52,h:44, type:'boulder',phase:0,spd:0});
     obs.push({x:djWallX, y:GROUND-88,  w:52,h:44, type:'boulder',phase:0,spd:0});
     obs.push({x:djWallX, y:GROUND-132, w:52,h:44, type:'boulder',phase:0,spd:0});
@@ -278,7 +285,7 @@ function update(){
   for(const o of obs){
     if(o.type==='goal') continue;
     if(o.type==='jumpfish') o.oy=o.y-Math.max(0,Math.sin(frame*0.06+o.phase)*52);
-    else if(o.type==='rollog') o.x-=o.spd;
+    else if(o.type==='rollog'){ if(o.triggerX===undefined||scroll>=o.triggerX) o.x-=o.spd; }
     else if(o.type==='duck')   o.x-=0.6;
     const ox=o.x-scroll+W/4, oy=o.oy!==undefined?o.oy:o.y;
     if(P.inv===0&&P.x+38>ox+4&&P.x+4<ox+o.w-4&&P.y+52>oy+4&&P.y+8<oy+o.h){
