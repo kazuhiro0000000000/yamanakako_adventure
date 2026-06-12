@@ -331,22 +331,30 @@ function fitFont(text, maxW, maxSize, weight) {
 // ─────────────────────────────────
 function drawTitle(){
   drawBG_shore(0);
-  const pw=Math.min(W*0.88,640),ph=104,px=W/2-pw/2,py=64;
+  // ボックス幅: 画面幅の85%、中央配置
+  const pw=W*0.85, px=(W-pw)/2, py=52, ph=120;
   const tg=ctx.createLinearGradient(px,py,px+pw,py+ph);
-  tg.addColorStop(0,'rgba(255,255,255,0.96)');tg.addColorStop(1,'rgba(228,238,255,0.96)');
+  tg.addColorStop(0,'rgba(255,255,255,0.97)');tg.addColorStop(1,'rgba(225,236,255,0.97)');
   ctx.fillStyle=tg;rrect(px,py,pw,ph,24);ctx.fill();
   ctx.strokeStyle='rgba(70,110,220,0.45)';ctx.lineWidth=2.5;rrect(px,py,pw,ph,24);ctx.stroke();
   ctx.textAlign='center';
-  fitFont('やまなかこアドベンチャー！',pw-60,29);
-  ctx.fillStyle='#1133AA';ctx.fillText('🏔️ やまなかこアドベンチャー！',W/2,py+42,pw-50);
-  fitFont('山中湖で大冒険しよう！',pw-60,17);
-  ctx.fillStyle='#4455AA';ctx.fillText('山中湖で大冒険しよう！',W/2,py+72,pw-60);
-  fitFont('4人のキャラで３ステージに挑戦！',pw-60,13);
-  ctx.fillStyle='#6677AA';ctx.fillText('4人のキャラで３ステージに挑戦！',W/2,py+94,pw-60);
+  // タイトル1行目: "🏔️ やまなかこ"
+  fitFont('やまなかこ',pw-28,25);
+  ctx.fillStyle='#1133AA';
+  ctx.fillText('🏔️ やまなかこ',W/2,py+36,pw-24);
+  // タイトル2行目: "アドベンチャー！"
+  fitFont('アドベンチャー！',pw-28,25);
+  ctx.fillStyle='#1133AA';
+  ctx.fillText('アドベンチャー！',W/2,py+66,pw-24);
+  // サブタイトル
+  fitFont('山中湖で大冒険しよう！',pw-28,15);
+  ctx.fillStyle='#4455AA';
+  ctx.fillText('山中湖で大冒険しよう！',W/2,py+94,pw-24);
+  // スタート
   if(blink(3)){
-    fitFont('▶ タップ または クリック ではじめる！',pw-30,19);
+    fitFont('▶ タップ または クリック ではじめる！',pw-28,19);
     ctx.fillStyle='#FF6622';
-    ctx.fillText('▶ タップ または クリック ではじめる！',W/2,286,pw-20);
+    ctx.fillText('▶ タップ または クリック ではじめる！',W/2,290,pw-24);
   }
   ctx.textAlign='left';
 }
