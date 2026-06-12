@@ -145,7 +145,7 @@ const BGM_SEQ = {
   ending: [[523,150],[659,150],[784,150],[1047,300],[R,150],[784,150],[880,150],[784,150],[659,300],[R,150],[698,150],[880,150],[1047,150],[880,300],[R,150],[784,150],[698,150],[659,150],[523,300],[R,300]],
 };
 let bgmKey=null,bgmIdx=0,bgmTid=null,stage3Audio=null;
-function _initS3(){if(stage3Audio)return;stage3Audio=new Audio(STAGE3_BGM_SRC);stage3Audio.loop=true;stage3Audio.volume=0.65;}
+function _initS3(){if(stage3Audio)return;stage3Audio=new Audio(STAGE3_BGM_SRC);stage3Audio.loop=true;stage3Audio.volume=0.45;}
 function startBGM(key){if(bgmKey===key)return;stopBGM();bgmKey=key;if(key==='forest'){_initS3();stage3Audio.currentTime=0;stage3Audio.play().catch(()=>{});return;}bgmIdx=0;_bgmTick();}
 function stopBGM(){bgmKey=null;if(bgmTid)clearTimeout(bgmTid);if(stage3Audio&&!stage3Audio.paused){stage3Audio.pause();stage3Audio.currentTime=0;}}
 function _bgmTick(){const k=bgmKey;if(!k||!AC)return;const[hz,ms]=BGM_SEQ[k][bgmIdx%BGM_SEQ[k].length];if(hz>0)tone(hz,ms*0.80/1000,0.07,'square');bgmIdx++;bgmTid=setTimeout(_bgmTick,ms);}
@@ -238,9 +238,19 @@ function goNextStage(){ if(stageIdx<2) startStage(stageIdx+1); else { state=ST.E
 
 function buildStage(idx){
   const sg=STAGES[idx];
+  // ステージ3: 2段ジャンプ壁の位置（周辺にランダム障害物を置かない）
+  const djWallX = idx===2 ? 4000 : -9999;
   for(let x=1100;x<sg.len-350;x+=270+rand(180)){
+    if(Math.abs(x-djWallX)<300) continue; // 壁周辺をクリア
     const ot=sg.obsTypes[ri(sg.obsTypes.length)];
     obs.push({x,y:GROUND-ot.h,w:ot.w,h:ot.h,type:ot.t,phase:rand(6.28),spd:ot.t==='rollog'?2.5:0});
+  }
+  // ステージ3: 2段ジャンプ必須の岩壁（高さ176px → 1段ジャンプ最大160pxでは越えられない）
+  if(idx===2){
+    obs.push({x:djWallX, y:GROUND-44,  w:52,h:44, type:'boulder',phase:0,spd:0});
+    obs.push({x:djWallX, y:GROUND-88,  w:52,h:44, type:'boulder',phase:0,spd:0});
+    obs.push({x:djWallX, y:GROUND-132, w:52,h:44, type:'boulder',phase:0,spd:0});
+    obs.push({x:djWallX, y:GROUND-176, w:52,h:44, type:'boulder',phase:0,spd:0});
   }
   for(let x=350;x<sg.len-350;x+=160+rand(120)){
     const it=sg.itmTypes[ri(sg.itmTypes.length)];
@@ -874,8 +884,6 @@ function drawObs(o, ox, oy){
       ctx.beginPath(); ctx.moveTo(0,-14); ctx.lineTo(0,14); ctx.stroke();
       ctx.fillStyle='rgba(255,255,255,0.3)'; ctx.beginPath(); ctx.ellipse(-4,-4,5,3,0.5,0,Math.PI*2); ctx.fill();
       ctx.restore();
-      ctx.fillStyle='rgba(255,140,0,0.9)'; ctx.font='bold 12px sans-serif'; ctx.textAlign='center';
-      ctx.fillText('ゴロゴロ！',ox+16,oy-6); ctx.textAlign='left';
       break;
     }
 
@@ -948,9 +956,6 @@ function drawObs(o, ox, oy){
       ctx.beginPath(); ctx.ellipse(ox+bw*0.45,oy+bh*0.28, 5, 3, 0, 0, Math.PI*2); ctx.fill();
       ctx.restore();
 
-      // 警告ラベル
-      ctx.fillStyle='rgba(255,210,60,0.92)'; ctx.font='bold 13px sans-serif'; ctx.textAlign='center';
-      ctx.fillText('⚠ 大岩！',bcx,oy-5); ctx.textAlign='left';
       break;
     }
   }
