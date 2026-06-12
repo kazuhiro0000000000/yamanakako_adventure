@@ -349,18 +349,19 @@ function drawTitle(){
   ctx.strokeStyle='rgba(80,120,220,0.4)'; ctx.lineWidth=2; rrect(px,py,pw,ph,22); ctx.stroke();
 
   ctx.textAlign='center';
-  fitFont('🏔️ やまなかこアドベンチャー！', pw-40, 34);
+  // 絵文字を除いて計測（iOSのmeasureText絵文字バグ回避）→ maxWidthで強制クリップ
+  fitFont('やまなかこアドベンチャー！', pw-60, 34);
   ctx.fillStyle='#1133AA';
-  ctx.fillText('🏔️ やまなかこアドベンチャー！', W/2, 125);
+  ctx.fillText('🏔️ やまなかこアドベンチャー！', W/2, 125, pw-50);
 
   fitFont('山中湖で大冒険しよう！', pw-60, 20);
   ctx.fillStyle='#4455AA';
-  ctx.fillText('山中湖で大冒険しよう！', W/2, 196);
+  ctx.fillText('山中湖で大冒険しよう！', W/2, 196, pw-60);
 
   if(blink(3)){
-    fitFont('▶ タップ または クリック ではじめる！', pw, 22);
+    fitFont('タップ または クリック ではじめる！', pw-30, 22);
     ctx.fillStyle='#FF6622';
-    ctx.fillText('▶ タップ または クリック ではじめる！', W/2, 278);
+    ctx.fillText('▶ タップ または クリック ではじめる！', W/2, 278, pw-20);
   }
   ctx.textAlign='left';
 }
