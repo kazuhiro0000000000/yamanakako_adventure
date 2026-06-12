@@ -6,19 +6,15 @@
   <title>🏔️ やまなかこアドベンチャー！ v7</title>
   <style>
     *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-    html {
-      height: 100%;
-      height: -webkit-fill-available;
-      overflow: hidden;
-    }
+    html { overflow:hidden; }
     body {
       background: #0d1b2a;
       display: flex;
       justify-content: center;
       align-items: center;
-      width: 100%;
+      width: 100vw;
       height: 100vh;
-      height: -webkit-fill-available;
+      height: 100dvh;
       overflow: hidden;
       touch-action: none;
     }
@@ -46,8 +42,8 @@ const STAGE3_BGM_SRC='data:audio/mp3;base64,SUQzBAAAAD5rNlRJVDIAAAAUAAAD44KE44Gj
 
 const canvas = document.getElementById('c');
 const ctx    = canvas.getContext('2d');
-const W = 800, H = 450;
-canvas.width = W; canvas.height = H;
+const W=800,H=450;
+canvas.width=W;canvas.height=H;
 
 function resize() {
   const ww = window.innerWidth, wh = window.innerHeight;
@@ -60,6 +56,7 @@ function resize() {
 resize();
 window.addEventListener('resize', resize);
 window.addEventListener('orientationchange', () => setTimeout(resize, 200));
+
 
 // =============================================
 // カラーユーティリティ
@@ -189,7 +186,7 @@ canvas.addEventListener('mousedown',e=>{
   if(state===ST.SELECT) handleSelectClick(mx,my); else onAction();
 });
 
-function getCards() {
+function getCards(){
   const bw=155,bh=225,total=bw*4+20*3,sx=(W-total)/2;
   return Array.from({length:4},(_,i)=>({bx:sx+i*(bw+20),by:105,bw,bh}));
 }
@@ -334,13 +331,23 @@ function fitFont(text, maxW, maxSize, weight) {
 // ─────────────────────────────────
 function drawTitle(){
   drawBG_shore(0);
-  const pw=Math.min(W*0.88,640),ph=90,px=W/2-pw/2,py=72;
-  const tg=ctx.createLinearGradient(px,py,px+pw,py+ph);tg.addColorStop(0,'rgba(255,255,255,0.95)');tg.addColorStop(1,'rgba(230,240,255,0.95)');
-  ctx.fillStyle=tg;rrect(px,py,pw,ph,22);ctx.fill();ctx.strokeStyle='rgba(80,120,220,0.4)';ctx.lineWidth=2;rrect(px,py,pw,ph,22);ctx.stroke();
+  const pw=Math.min(W*0.88,640),ph=104,px=W/2-pw/2,py=64;
+  const tg=ctx.createLinearGradient(px,py,px+pw,py+ph);
+  tg.addColorStop(0,'rgba(255,255,255,0.96)');tg.addColorStop(1,'rgba(228,238,255,0.96)');
+  ctx.fillStyle=tg;rrect(px,py,pw,ph,24);ctx.fill();
+  ctx.strokeStyle='rgba(70,110,220,0.45)';ctx.lineWidth=2.5;rrect(px,py,pw,ph,24);ctx.stroke();
   ctx.textAlign='center';
-  fitFont('やまなかこアドベンチャー！',pw-60,34);ctx.fillStyle='#1133AA';ctx.fillText('🏔️ やまなかこアドベンチャー！',W/2,125,pw-50);
-  fitFont('山中湖で大冒険しよう！',pw-60,20);ctx.fillStyle='#4455AA';ctx.fillText('山中湖で大冒険しよう！',W/2,196,pw-60);
-  if(blink(3)){fitFont('タップ または クリック ではじめる！',pw-30,22);ctx.fillStyle='#FF6622';ctx.fillText('▶ タップ または クリック ではじめる！',W/2,278,pw-20);}
+  fitFont('やまなかこアドベンチャー！',pw-60,29);
+  ctx.fillStyle='#1133AA';ctx.fillText('🏔️ やまなかこアドベンチャー！',W/2,py+42,pw-50);
+  fitFont('山中湖で大冒険しよう！',pw-60,17);
+  ctx.fillStyle='#4455AA';ctx.fillText('山中湖で大冒険しよう！',W/2,py+72,pw-60);
+  fitFont('4人のキャラで３ステージに挑戦！',pw-60,13);
+  ctx.fillStyle='#6677AA';ctx.fillText('4人のキャラで３ステージに挑戦！',W/2,py+94,pw-60);
+  if(blink(3)){
+    fitFont('▶ タップ または クリック ではじめる！',pw-30,19);
+    ctx.fillStyle='#FF6622';
+    ctx.fillText('▶ タップ または クリック ではじめる！',W/2,286,pw-20);
+  }
   ctx.textAlign='left';
 }
 
@@ -350,27 +357,22 @@ function drawTitle(){
 function drawSelect(){
   drawBG_shore(0);
   ctx.textAlign='center';
-  fitFont('キャラクターをえらぼう！', 460, 26);
-  ctx.fillStyle='#1133AA'; ctx.fillText('キャラクターをえらぼう！',W/2,48);
-  fitFont('えらびたいキャラクターをタップ！', 460, 15);
-  ctx.fillStyle='#555'; ctx.fillText('えらびたいキャラクターをタップ！',W/2,74);
-
+  fitFont('キャラクターをえらぼう！',460,26);
+  ctx.fillStyle='#1133AA';ctx.fillText('キャラクターをえらぼう！',W/2,48);
+  fitFont('えらびたいキャラクターをタップ！',460,15);
+  ctx.fillStyle='#555';ctx.fillText('えらびたいキャラクターをタップ！',W/2,74);
   const cards=getCards();
   for(let i=0;i<4;i++){
-    const c=CHARS[i]; const {bx,by,bw,bh}=cards[i];
+    const c=CHARS[i];const{bx,by,bw,bh}=cards[i];
     const cg=ctx.createLinearGradient(bx,by,bx,by+bh);
-    cg.addColorStop(0,'rgba(255,255,255,0.97)'); cg.addColorStop(1,'rgba(235,242,255,0.97)');
-    ctx.fillStyle=cg; rrect(bx,by,bw,bh,14); ctx.fill();
-    ctx.strokeStyle=c.color; ctx.lineWidth=3; rrect(bx,by,bw,bh,14); ctx.stroke();
-    ctx.fillStyle=c.color+'44'; ctx.fillRect(bx+3,by+3,bw-6,28);
+    cg.addColorStop(0,'rgba(255,255,255,0.97)');cg.addColorStop(1,'rgba(235,242,255,0.97)');
+    ctx.fillStyle=cg;rrect(bx,by,bw,bh,14);ctx.fill();
+    ctx.strokeStyle=c.color;ctx.lineWidth=3;rrect(bx,by,bw,bh,14);ctx.stroke();
+    ctx.fillStyle=c.color+'44';ctx.fillRect(bx+3,by+3,bw-6,28);
     drawChar(c,bx+bw/2-20,by+18,0,false);
-    fitFont(c.name, bw-10, 21);
-    ctx.fillStyle='#222'; ctx.fillText(c.name,bx+bw/2,by+138);
-    fitFont(c.desc, bw-14, 13,'normal');
-    ctx.fillStyle='#555'; ctx.fillText(c.desc,bx+bw/2,by+162);
-    ctx.fillStyle=c.color;
-    fitFont('▼ えらぶ', bw-10, 15);
-    ctx.fillText('▼ えらぶ',bx+bw/2,by+200);
+    fitFont(c.name,bw-10,21);ctx.fillStyle='#222';ctx.fillText(c.name,bx+bw/2,by+138,bw-10);
+    fitFont(c.desc,bw-14,13,'normal');ctx.fillStyle='#555';ctx.fillText(c.desc,bx+bw/2,by+162,bw-14);
+    ctx.fillStyle=c.color;fitFont('▼ えらぶ',bw-10,15);ctx.fillText('▼ えらぶ',bx+bw/2,by+200,bw-10);
   }
   ctx.textAlign='left';
 }
