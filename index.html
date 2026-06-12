@@ -8,7 +8,7 @@
     * { margin:0; padding:0; box-sizing:border-box; }
     body { background:#0d1b2a; display:flex; justify-content:center; align-items:center;
            width:100vw; height:100vh; overflow:hidden; touch-action:none; }
-    canvas { display:block; position:absolute; }
+    canvas { display:block; position:fixed; left:50%; top:50%; transform-origin:center center; }
   </style>
 </head>
 <body>
@@ -38,11 +38,7 @@ canvas.width = W; canvas.height = H;
 function resize() {
   const ww = window.innerWidth, wh = window.innerHeight;
   const scale = Math.min(ww / W, wh / H);
-  const sw = Math.floor(W * scale), sh = Math.floor(H * scale);
-  canvas.style.width  = sw + 'px';
-  canvas.style.height = sh + 'px';
-  canvas.style.left   = Math.floor((ww - sw) / 2) + 'px';
-  canvas.style.top    = Math.floor((wh - sh) / 2) + 'px';
+  canvas.style.transform = 'translate(-50%, -50%) scale(' + scale + ')';
 }
 resize();
 window.addEventListener('resize', resize);
