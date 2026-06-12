@@ -600,7 +600,7 @@ function drawBG_shore(sc){
   drawBGPhoto(BG_IMGS[2],sc,0.15);
   const grdG=ctx.createLinearGradient(0,GROUND,0,H);grdG.addColorStop(0,'rgba(122,182,72,0.88)');grdG.addColorStop(1,'rgba(74,126,40,0.88)');
   ctx.fillStyle=grdG;ctx.fillRect(0,GROUND,W,H-GROUND);ctx.fillStyle='rgba(90,154,48,0.95)';ctx.fillRect(0,GROUND,W,8);
-  ctx.fillStyle='rgba(136,204,68,0.85)';for(let gx=sc%38;gx<W;gx+=38){ctx.fillRect(gx+2,GROUND-5,5,8);ctx.fillRect(gx+16,GROUND-7,4,10);}
+  
 }
 
 // ── ステージ2: 湖上 ──
@@ -700,41 +700,37 @@ function drawChar(c, x, y, af, withShadow) {
   // ── 顔（大きい丸・AC風）──
   const fG=ctx.createRadialGradient(x+13,y+3,2,x+20,y+8,18);
   fG.addColorStop(0,'#FFE8BB'); fG.addColorStop(1,'#FFCC88');
-  ctx.fillStyle=fG; ctx.beginPath(); ctx.arc(x+20,y+8,18,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle=fG; ctx.beginPath(); ctx.arc(x+20,y+8,16,0,Math.PI*2); ctx.fill();
   ctx.strokeStyle='rgba(180,110,50,0.18)'; ctx.lineWidth=1;
-  ctx.beginPath(); ctx.arc(x+20,y+8,18,0,Math.PI*2); ctx.stroke();
+  ctx.beginPath(); ctx.arc(x+20,y+8,16,0,Math.PI*2); ctx.stroke();
   // 顔ハイライト
   ctx.fillStyle='rgba(255,255,255,0.28)';
   ctx.beginPath(); ctx.arc(x+11,y+2,6,0,Math.PI*2); ctx.fill();
 
-  // ── ほっぺた（大きめ丸・AC風）──
-  ctx.fillStyle='rgba(255,145,130,0.44)';
-  ctx.beginPath(); ctx.arc(x+8, y+14,6.5,0,Math.PI*2); ctx.fill();
-  ctx.beginPath(); ctx.arc(x+32,y+14,6.5,0,Math.PI*2); ctx.fill();
 
   // ── 目（小さめ黒丸・AC風）──
   ctx.fillStyle='#060606';
-  ctx.beginPath(); ctx.ellipse(x+14,y+12,4,4.5,0,0,Math.PI*2); ctx.fill();
-  ctx.beginPath(); ctx.ellipse(x+26,y+12,4,4.5,0,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(x+14,y+12,2.5,3.8,0,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(x+26,y+12,2.5,3.8,0,0,Math.PI*2); ctx.fill();
   // メインハイライト
   ctx.fillStyle='rgba(255,255,255,0.92)';
-  ctx.beginPath(); ctx.arc(x+15.5,y+9.5,2,0,Math.PI*2); ctx.fill();
-  ctx.beginPath(); ctx.arc(x+27.5,y+9.5,2,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(x+15.5,y+9.5,1.5,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(x+27.5,y+9.5,1.5,0,Math.PI*2); ctx.fill();
   // サブハイライト（小）
   ctx.fillStyle='rgba(255,255,255,0.5)';
-  ctx.beginPath(); ctx.arc(x+12.5,y+13.5,1,0,Math.PI*2); ctx.fill();
-  ctx.beginPath(); ctx.arc(x+24.5,y+13.5,1,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(x+12.5,y+13.5,0.8,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(x+24.5,y+13.5,0.8,0,Math.PI*2); ctx.fill();
 
   // ── 鼻（小さいオレンジ丸ボタン・AC風）──
   ctx.fillStyle='#FF9944';
-  ctx.beginPath(); ctx.ellipse(x+20,y+17,3.5,3,0,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(x+20,y+17,2.5,2.2,0,0,Math.PI*2); ctx.fill();
   ctx.fillStyle='rgba(255,220,160,0.55)';
-  ctx.beginPath(); ctx.arc(x+18.5,y+15.5,1.8,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(x+18.5,y+15.5,1.2,0,Math.PI*2); ctx.fill();
 
   // ── 笑顔 ──
   ctx.save();
-  ctx.strokeStyle='rgba(140,70,40,0.72)'; ctx.lineWidth=2.2; ctx.lineCap='round';
-  ctx.beginPath(); ctx.arc(x+20,y+22,4,0.12*Math.PI,0.88*Math.PI); ctx.stroke();
+  ctx.strokeStyle='rgba(140,70,40,0.42)'; ctx.lineWidth=1.6; ctx.lineCap='round';
+  ctx.beginPath(); ctx.arc(x+20,y+20,4,0.12*Math.PI,0.88*Math.PI); ctx.stroke();
   ctx.restore();
 
   // ── 髪（前面に描画）──
@@ -752,8 +748,8 @@ function drawChar(c, x, y, af, withShadow) {
     ctx.lineTo(x+28, y+6);    // 谷3
     ctx.lineTo(x+33, y+1);    // ▲ピーク4
     ctx.lineTo(x+38, y+7);    // 右端
-    ctx.lineTo(x+38, y-4);    // 右上へ
-    ctx.arc(x+20,y-4,19,0,Math.PI,true); // 頭頂アーク
+    ctx.lineTo(x+38, y+2);    // 右サイド
+    ctx.arc(x+20,y+2,18,0,Math.PI,true); // 頭頂アーク
     ctx.closePath(); ctx.fill();
     // ハイライト
     ctx.fillStyle='rgba(255,255,255,0.22)';
@@ -769,26 +765,13 @@ function drawChar(c, x, y, af, withShadow) {
     ctx.lineTo(x+27, y+6);    // 右カーブ
     ctx.lineTo(x+33, y+3);    // 右ふわり
     ctx.lineTo(x+38, y+7);
-    ctx.lineTo(x+38, y-4);
-    ctx.arc(x+20,y-4,19,0,Math.PI,true);
+    ctx.lineTo(x+38, y+2);
+    ctx.arc(x+20,y+2,18,0,Math.PI,true);
     ctx.closePath(); ctx.fill();
     // ハイライト
     ctx.fillStyle='rgba(255,255,255,0.22)';
     ctx.beginPath(); ctx.arc(x+13,y-7,7,Math.PI,0); ctx.fill();
 
-    // ── ヘアバンド＋リボン ──
-    const hbG=ctx.createLinearGradient(x+4,y+5,x+36,y+11);
-    hbG.addColorStop(0,'#FF88EE'); hbG.addColorStop(1,'#DD22AA');
-    ctx.fillStyle=hbG; rrect(x+4,y+5,34,6,3); ctx.fill();
-    // リボン左羽根
-    ctx.fillStyle='#FF44CC';
-    ctx.beginPath(); ctx.moveTo(x+17,y+8); ctx.lineTo(x+10,y+4); ctx.lineTo(x+10,y+12); ctx.fill();
-    // リボン右羽根
-    ctx.beginPath(); ctx.moveTo(x+23,y+8); ctx.lineTo(x+30,y+4); ctx.lineTo(x+30,y+12); ctx.fill();
-    // ノット
-    const rbG=ctx.createRadialGradient(x+20,y+8,0,x+20,y+8,4.5);
-    rbG.addColorStop(0,'#FFBBEE'); rbG.addColorStop(1,'#FF44CC');
-    ctx.fillStyle=rbG; ctx.beginPath(); ctx.arc(x+20,y+8,4.5,0,Math.PI*2); ctx.fill();
   }
 }
 
