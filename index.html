@@ -131,7 +131,7 @@ let AC = null;
 function initAudio() { if(AC) return; try { AC = new (window.AudioContext||window.webkitAudioContext)(); } catch(e){} }
 // マスター音量 & サウンドON/OFF
 let MASTER_VOL=0.28, soundOn=true;
-const STAGE3_VOL=0.15; // ステージ3 mp3 BGMのゲイン(WebAudio経由でiOSでも有効)
+const STAGE3_VOL=0.06; // ステージ3 mp3 BGMのゲイン(WebAudio経由でiOSでも有効)
 function tone(hz, sec, vol, type) {
   if(!AC||hz<=0||!soundOn) return;
   vol=vol*MASTER_VOL;
@@ -178,7 +178,6 @@ function _initS3(){
   if(stage3Audio)return;
   stage3Audio=new Audio(STAGE3_BGM_SRC);
   stage3Audio.loop=true;
-  stage3Audio.crossOrigin='anonymous';
   stage3Audio.volume=1; // iOSはvolume無視 → WebAudioのgainで制御
   try{
     initAudio();
