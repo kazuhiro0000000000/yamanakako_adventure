@@ -66,6 +66,11 @@ canvas.height=Math.round(H*RENDER_SCALE);
 ctx.setTransform(RENDER_SCALE,0,0,RENDER_SCALE,0,0);
 ctx.imageSmoothingEnabled=true;
 ctx.imageSmoothingQuality='high';
+// 🍖アイコンを一度だけ描画してキャッシュ（毎フレーム絵文字描画によるチラつき防止）
+const MEAT_ICON=document.createElement('canvas'); MEAT_ICON.width=128; MEAT_ICON.height=128;
+(function(){ try{ const m=MEAT_ICON.getContext('2d'); m.textAlign='center'; m.textBaseline='middle';
+  m.font='104px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
+  m.fillText('🍖',64,72); }catch(e){} })();
 
 function resize() {
   const ww = window.innerWidth, wh = window.innerHeight;
@@ -171,7 +176,7 @@ const BGM_SEQ = {
   ending: [[523,150],[659,150],[784,150],[1047,300],[R,150],[784,150],[880,150],[784,150],[659,300],[R,150],[698,150],[880,150],[1047,150],[880,300],[R,150],[784,150],[698,150],[659,150],[523,300],[R,300]],
 };
 let bgmKey=null,bgmIdx=0,bgmTid=null,stage3Audio=null;
-function _initS3(){if(stage3Audio)return;stage3Audio=new Audio(STAGE3_BGM_SRC);stage3Audio.loop=true;stage3Audio.volume=0.2*MASTER_VOL;}
+function _initS3(){if(stage3Audio)return;stage3Audio=new Audio(STAGE3_BGM_SRC);stage3Audio.loop=true;stage3Audio.volume=0.1*MASTER_VOL;}
 function startBGM(key){if(bgmKey===key)return;stopBGM();bgmKey=key;if(key==='forest'){_initS3();stage3Audio.currentTime=0;stage3Audio.play().catch(()=>{});return;}bgmIdx=0;_bgmTick();}
 function stopBGM(){bgmKey=null;if(bgmTid)clearTimeout(bgmTid);if(stage3Audio&&!stage3Audio.paused){stage3Audio.pause();stage3Audio.currentTime=0;}}
 function _bgmTick(){const k=bgmKey;if(!k||!AC)return;const[hz,ms]=BGM_SEQ[k][bgmIdx%BGM_SEQ[k].length];if(hz>0)tone(hz,ms*0.80/1000,0.04,'square');bgmIdx++;bgmTid=setTimeout(_bgmTick,ms);}
@@ -958,9 +963,7 @@ function drawItem(it, ix, iy){
       ctx.fillStyle='rgba(255,255,255,0.4)'; ctx.beginPath(); ctx.ellipse(-3,-2,5,3,0,0,Math.PI*2); ctx.fill();
       ctx.fillStyle='#FFCC00'; ctx.beginPath(); ctx.moveTo(12,0);ctx.lineTo(20,-7);ctx.lineTo(20,7); ctx.fill(); break;
     case 'meat':
-      ctx.textAlign='center'; ctx.textBaseline='middle';
-      ctx.font='30px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
-      ctx.fillText('🍖',0,1); break;
+      ctx.drawImage(MEAT_ICON, -16, -16, 32, 32); break;
     case 'corn':
       const cnG=ctx.createLinearGradient(-8,-14,8,14);
       cnG.addColorStop(0,'#FFEE44'); cnG.addColorStop(1,'#DDAA00');
