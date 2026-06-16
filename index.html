@@ -176,7 +176,7 @@ const BGM_SEQ = {
   ending: [[523,150],[659,150],[784,150],[1047,300],[R,150],[784,150],[880,150],[784,150],[659,300],[R,150],[698,150],[880,150],[1047,150],[880,300],[R,150],[784,150],[698,150],[659,150],[523,300],[R,300]],
 };
 let bgmKey=null,bgmIdx=0,bgmTid=null,stage3Audio=null;
-function _initS3(){if(stage3Audio)return;stage3Audio=new Audio(STAGE3_BGM_SRC);stage3Audio.loop=true;stage3Audio.volume=0.1*MASTER_VOL;}
+function _initS3(){if(stage3Audio)return;stage3Audio=new Audio(STAGE3_BGM_SRC);stage3Audio.loop=true;stage3Audio.volume=0.05*MASTER_VOL;}
 function startBGM(key){if(bgmKey===key)return;stopBGM();bgmKey=key;if(key==='forest'){_initS3();stage3Audio.currentTime=0;stage3Audio.play().catch(()=>{});return;}bgmIdx=0;_bgmTick();}
 function stopBGM(){bgmKey=null;if(bgmTid)clearTimeout(bgmTid);if(stage3Audio&&!stage3Audio.paused){stage3Audio.pause();stage3Audio.currentTime=0;}}
 function _bgmTick(){const k=bgmKey;if(!k||!AC)return;const[hz,ms]=BGM_SEQ[k][bgmIdx%BGM_SEQ[k].length];if(hz>0)tone(hz,ms*0.80/1000,0.04,'square');bgmIdx++;bgmTid=setTimeout(_bgmTick,ms);}
@@ -305,7 +305,7 @@ function update(){
   if(state!==ST.GAME) return;
   frame++;
   const sg=STAGES[stageIdx];
-  scroll+=4*ch.speedMul;
+  scroll+=4*ch.speedMul*([1,1.12,1.12][stageIdx]||1);
   if(sg.len-scroll+W/4<P.x+40){ finishGame(true); return; }
 
   P.vy+=ch.grav; P.y+=P.vy;
